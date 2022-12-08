@@ -17,18 +17,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <form class="example" action="">
 <select name="origin" id="origin">
   <option value="">Select Origin</option>
-  <option value="delhi">Delhi</option>
-  <option value="mumbai">Mumbai</option>
-  <option value="goa">Goa</option>
-  <option value="chennai">Chennai</option>
+  <option value="DEL">Delhi</option>
+  <option value="BOM">Bombay</option>
+  <option value="HYD">Hedrabad</option>
+  <option value="GOI">Goa</option>
+  <option value="LKO">Lucknow</option>
 </select>
 
 <select name="destination" id="destination">
   <option value="">Select Destination</option>
-  <option value="delhi">Delhi</option>
-  <option value="mumbai">Mumbai</option>
-  <option value="goa">Goa</option>
-  <option value="chennai">Chennai</option>
+  <option value="DEL">Delhi</option>
+  <option value="BOM">Bombay</option>
+  <option value="HYD">Hedrabad</option>
+  <option value="GOI">Goa</option>
+  <option value="LKO">Lucknow</option>
 </select>
 
   <input type="date" placeholder="Departure Date" name="departure_date">
@@ -48,6 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <select name="child" id="child">
   <option value="">Select Child</option>
+  <option value="0">0</option>
   <option value="1">1</option>
   <option value="2">2</option>
   <option value="3">3</option>
@@ -61,6 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <select name="infant" id="infant">
   <option value="">Select Infant</option>
+  <option value="0">0</option>
   <option value="1">1</option>
   <option value="2">2</option>
   <option value="3">3</option>
@@ -83,6 +87,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <button type="submit">Search</button>
 </form>
 </div>
+<br><br>
+<div class="container">
+<p>Source : </p>
+<p>Destination : </p>
+<p></p>
+<p></p>
+</div>
+
+
 </div>
 
 </body>
