@@ -1,5 +1,10 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+$flag = $this->session->userdata('flag');
+if($flag != 1){
+	redirect('login');
+}
+
+
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,6 +92,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <button type="submit">Search</button>
 </form>
 </div>
+  <a href="user_logout"><button style="margin-left: 1100px;color:red">Log Out</button></a>
 <br><br>
 <div class="container">
 <p>Source : </p>

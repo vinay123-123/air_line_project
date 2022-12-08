@@ -22,12 +22,18 @@ class Home extends CI_Controller {
 	
 	if($result_arr->num_rows() > 0)
 	{
-	redirect('home');
+		$this->session->set_userdata('flag',1);
+	      redirect('home');
 	}else{
 		$this->session->set_flashdata('error_msg','Plaese enter correct username and password');
 		   redirect('login'); 
 	}
-	
-		//$this->load->view('login');
-	}
+  }
+
+ public function user_logout()
+	{
+		$this->session->unset_userdata('flag');
+	      redirect('login');
+  }
+  
 }
