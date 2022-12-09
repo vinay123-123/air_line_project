@@ -97,6 +97,14 @@ if($flag != 1){
 <div class="container">
 <p>Source : </p>
 <p>Destination : </p>
+<p>Duration : </p>
+<p>Departure : </p>
+<p>Arrival : </p>
+<p>PublishedFare : </p>
+<p>OfferedFare : </p>
+<p>Discount : </p>
+<p>Destination : </p>
+<p>Destination : </p>
 <p></p>
 <p></p>
 </div>
