@@ -146,11 +146,11 @@ class Home extends CI_Controller {
 			 "Destination": "'.$userData['destination'].'",
 			 "FlightCabinClass": "1",
 			 "PreferredDepartureTime": "'.$userData['departure_date'].'T00: 00: 00",
-			 "PreferredArrivalTime": "2022-12-20T00: 00: 00"
+			 "PreferredArrivalTime": "2023-01-20T00: 00: 00"
 			 }
 			 ],
 			 "Sources": [
-			 "SG"
+			 "G8"
 			 ]
 			}',
 			  CURLOPT_HTTPHEADER => array(
@@ -163,6 +163,7 @@ class Home extends CI_Controller {
 			curl_close($curl);	
 	if(isset($search_data['Response']['Error']['ErrorMessage']) && $search_data['Response']['Error']['ErrorMessage'] != ''){		
 	
+	$this->session->set_userdata('input_data',$userData);
 	$this->session->set_flashdata('error_search',$search_data['Response']['Error']['ErrorMessage']);
 		redirect('home');
 	  
@@ -184,6 +185,7 @@ class Home extends CI_Controller {
 	$result = $db->insert('tbl_user_search_details',$user_search_detail_arr);	
 		$search_data = json_decode($response,true);
 		$this->session->set_userdata('search_data',$search_data);
+		$this->session->set_userdata('input_data',$userData);
 		
 	   redirect('home');
 	 }
@@ -224,6 +226,9 @@ class Home extends CI_Controller {
 		$this->session->unset_userdata('flag');
 		$this->session->unset_userdata('search_data');
 		$this->session->unset_userdata('TokenId');
+		$this->session->unset_userdata('MemberId');
+	    $this->session->unset_userdata('AgencyId');	
+	    $this->session->unset_userdata('input_data');	
 	      redirect('login');
   }
   

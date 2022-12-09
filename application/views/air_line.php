@@ -3,6 +3,7 @@ $flag = $this->session->userdata('flag');
 $TokenId = $this->session->userdata('TokenId');
 $username = $this->session->userdata('username');
 $search_data = $this->session->userdata('search_data');
+$input_data = $this->session->userdata('input_data');
 
 if($flag != 1){
 	redirect('login');
@@ -30,73 +31,73 @@ if($flag != 1){
 <form class="example" action="<?php echo base_url(); ?>/search_flight" method="post">
 <select name="origin" id="origin" required>
   <option value="">Select Origin</option>
-  <option value="DEL">Delhi</option>
-  <option value="BOM">Bombay</option>
-  <option value="HYD">Hedrabad</option>
-  <option value="GOI">Goa</option>
-  <option value="LKO">Lucknow</option>
+  <option value="DEL" <?php if(isset($input_data['origin'])){echo $input_data['origin']=='DEL'?'selected':'';}; ?>>Delhi</option>
+  <option value="BOM" <?php if(isset($input_data['origin'])){echo $input_data['origin']=='BOM'?'selected':'';}; ?>>Bombay</option>
+  <option value="HYD" <?php if(isset($input_data['origin'])){echo $input_data['origin']=='HYD'?'selected':'';}; ?>>Hedrabad</option>
+  <option value="GOI" <?php if(isset($input_data['origin'])){echo $input_data['origin']=='GOI'?'selected':'';}; ?>>Goa</option>
+  <option value="LKO" <?php if(isset($input_data['origin'])){echo $input_data['origin']=='LKO'?'selected':'';}; ?>>Lucknow</option>
 </select>
 
 <select name="destination" id="destination" required>
   <option value="">Select Destination</option>
-  <option value="DEL">Delhi</option>
-  <option value="BOM">Bombay</option>
-  <option value="HYD">Hedrabad</option>
-  <option value="GOI">Goa</option>
-  <option value="LKO">Lucknow</option>
+  <option value="DEL" <?php if(isset($input_data['destination'])){echo $input_data['destination']=='DEL'?'selected':'';}; ?>>Delhi</option>
+  <option value="BOM" <?php if(isset($input_data['destination'])){echo $input_data['destination']=='BOM'?'selected':'';}; ?>>Bombay</option>
+  <option value="HYD" <?php if(isset($input_data['destination'])){echo $input_data['destination']=='HYD'?'selected':'';}; ?>>Hedrabad</option>
+  <option value="GOI" <?php if(isset($input_data['destination'])){echo $input_data['destination']=='GOI'?'selected':'';}; ?>>Goa</option>
+  <option value="LKO" <?php if(isset($input_data['destination'])){echo $input_data['destination']=='LKO'?'selected':'';}; ?>>Lucknow</option>
 </select>
 
   <input  type="text" placeholder="Enter Departure Date"
         onfocus="(this.type='date')"
-        onblur="(this.type='text')" name="departure_date" required>
+        onblur="(this.type='text')" name="departure_date" value="<?php if(isset($input_data['departure_date'])){echo $input_data['departure_date'];}; ?>" required>
   
 <select name="adult" id="adult" required>
   <option value="">Select Adult</option>
-  <option value="1">1</option>
-  <option value="2">2</option>
-  <option value="3">3</option>
-  <option value="4">4</option>
-  <option value="5">5</option>
-  <option value="6">6</option>
-  <option value="7">7</option>
-  <option value="8">8</option>
-  <option value="9">9</option>
+  <option value="1" <?php if(isset($input_data['adult'])){echo $input_data['adult']=='1'?'selected':'';}; ?>>1</option>
+  <option value="2" <?php if(isset($input_data['adult'])){echo $input_data['adult']=='2'?'selected':'';}; ?>>2</option>
+  <option value="3" <?php if(isset($input_data['adult'])){echo $input_data['adult']=='3'?'selected':'';}; ?>>3</option>
+  <option value="4" <?php if(isset($input_data['adult'])){echo $input_data['adult']=='4'?'selected':'';}; ?>>4</option>
+  <option value="5" <?php if(isset($input_data['adult'])){echo $input_data['adult']=='5'?'selected':'';}; ?>>5</option>
+  <option value="6" <?php if(isset($input_data['adult'])){echo $input_data['adult']=='6'?'selected':'';}; ?>>6</option>
+  <option value="7" <?php if(isset($input_data['adult'])){echo $input_data['adult']=='7'?'selected':'';}; ?>>7</option>
+  <option value="8" <?php if(isset($input_data['adult'])){echo $input_data['adult']=='8'?'selected':'';}; ?>>8</option>
+  <option value="9" <?php if(isset($input_data['adult'])){echo $input_data['adult']=='9'?'selected':'';}; ?>>9</option>
 </select>
 
 <select name="child" id="child" required>
   <option value="">Select Child</option>
-  <option value="0">0</option>
-  <option value="1">1</option>
-  <option value="2">2</option>
-  <option value="3">3</option>
-  <option value="4">4</option>
-  <option value="5">5</option>
-  <option value="6">6</option>
-  <option value="7">7</option>
-  <option value="8">8</option>
-  <option value="9">9</option>
+  <option value="0" <?php if(isset($input_data['child'])){echo $input_data['child']=='0'?'selected':'';}; ?>>0</option>
+  <option value="1" <?php if(isset($input_data['child'])){echo $input_data['child']=='1'?'selected':'';}; ?>>1</option>
+  <option value="2" <?php if(isset($input_data['child'])){echo $input_data['child']=='2'?'selected':'';}; ?>>2</option>
+  <option value="3" <?php if(isset($input_data['child'])){echo $input_data['child']=='3'?'selected':'';}; ?>>3</option>
+  <option value="4" <?php if(isset($input_data['child'])){echo $input_data['child']=='4'?'selected':'';}; ?>>4</option>
+  <option value="5" <?php if(isset($input_data['child'])){echo $input_data['child']=='5'?'selected':'';}; ?>>5</option>
+  <option value="6" <?php if(isset($input_data['child'])){echo $input_data['child']=='6'?'selected':'';}; ?>>6</option>
+  <option value="7" <?php if(isset($input_data['child'])){echo $input_data['child']=='7'?'selected':'';}; ?>>7</option>
+  <option value="8" <?php if(isset($input_data['child'])){echo $input_data['child']=='8'?'selected':'';}; ?>>8</option>
+  <option value="9" <?php if(isset($input_data['child'])){echo $input_data['child']=='9'?'selected':'';}; ?>>9</option>
 </select>
 
 <select name="infant" id="infant" required>
   <option value="">Select Infant</option>
-  <option value="0">0</option>
-  <option value="1">1</option>
-  <option value="2">2</option>
-  <option value="3">3</option>
-  <option value="4">4</option>
-  <option value="5">5</option>
-  <option value="6">6</option>
-  <option value="7">7</option>
-  <option value="8">8</option>
-  <option value="9">9</option>
+  <option value="0" <?php if(isset($input_data['infant'])){echo $input_data['infant']=='0'?'selected':'';}; ?>>0</option>
+  <option value="1" <?php if(isset($input_data['infant'])){echo $input_data['infant']=='1'?'selected':'';}; ?>>1</option>
+  <option value="2" <?php if(isset($input_data['infant'])){echo $input_data['infant']=='2'?'selected':'';}; ?>>2</option>
+  <option value="3" <?php if(isset($input_data['infant'])){echo $input_data['infant']=='3'?'selected':'';}; ?>>3</option>
+  <option value="4" <?php if(isset($input_data['infant'])){echo $input_data['infant']=='4'?'selected':'';}; ?>>4</option>
+  <option value="5" <?php if(isset($input_data['infant'])){echo $input_data['infant']=='5'?'selected':'';}; ?>>5</option>
+  <option value="6" <?php if(isset($input_data['infant'])){echo $input_data['infant']=='6'?'selected':'';}; ?>>6</option>
+  <option value="7" <?php if(isset($input_data['infant'])){echo $input_data['infant']=='7'?'selected':'';}; ?>>7</option>
+  <option value="8" <?php if(isset($input_data['infant'])){echo $input_data['infant']=='8'?'selected':'';}; ?>>8</option>
+  <option value="9" <?php if(isset($input_data['infant'])){echo $input_data['infant']=='9'?'selected':'';}; ?>>9</option>
 </select>
   
 <select name="class" id="class" required>
   <option value="">Select Class</option>
-  <option value="all">All</option>
-  <option value="economy">Economy</option>
-  <option value="premium economy">Premium Economy</option>
-  <option value="business">Business</option>
+  <option value="all" <?php if(isset($input_data['class'])){echo $input_data['class']=='all'?'selected':'';}; ?>>All</option>
+  <option value="economy" <?php if(isset($input_data['class'])){echo $input_data['class']=='economy'?'selected':'';}; ?>>Economy</option>
+  <option value="premium economy" <?php if(isset($input_data['class'])){echo $input_data['class']=='premium economy'?'selected':'';}; ?>>Premium Economy</option>
+  <option value="business" <?php if(isset($input_data['class'])){echo $input_data['class']=='business'?'selected':'';}; ?>>Business</option>
 </select>
   <input type="hidden" name="username" value="<?php echo $username; ?>">
   <input type="hidden" name="TokenId" value="<?php echo $TokenId; ?>">
