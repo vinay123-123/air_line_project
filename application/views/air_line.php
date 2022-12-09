@@ -1,5 +1,9 @@
 <?php
 $flag = $this->session->userdata('flag');
+$TokenId = $this->session->userdata('TokenId');
+$username = $this->session->userdata('username');
+$search_data = $this->session->userdata('search_data');
+
 if($flag != 1){
 	redirect('login');
 }
@@ -18,9 +22,13 @@ if($flag != 1){
 <body>
 
 <div class="container">
+ <?php $error_search = $this->session->flashdata('error_search'); ?> 
+  <h3 style="color: red;"><?php if(isset($error_search)){
+	  echo $error_search;
+  } ?></h3> 
 <div class="row" style="margin-top:30px">
-<form class="example" action="">
-<select name="origin" id="origin">
+<form class="example" action="<?php echo base_url(); ?>/search_flight" method="post">
+<select name="origin" id="origin" required>
   <option value="">Select Origin</option>
   <option value="DEL">Delhi</option>
   <option value="BOM">Bombay</option>
@@ -29,7 +37,7 @@ if($flag != 1){
   <option value="LKO">Lucknow</option>
 </select>
 
-<select name="destination" id="destination">
+<select name="destination" id="destination" required>
   <option value="">Select Destination</option>
   <option value="DEL">Delhi</option>
   <option value="BOM">Bombay</option>
@@ -38,9 +46,11 @@ if($flag != 1){
   <option value="LKO">Lucknow</option>
 </select>
 
-  <input type="date" placeholder="Departure Date" name="departure_date">
+  <input  type="text" placeholder="Enter Departure Date"
+        onfocus="(this.type='date')"
+        onblur="(this.type='text')" name="departure_date" required>
   
-<select name="adult" id="adult">
+<select name="adult" id="adult" required>
   <option value="">Select Adult</option>
   <option value="1">1</option>
   <option value="2">2</option>
@@ -53,7 +63,7 @@ if($flag != 1){
   <option value="9">9</option>
 </select>
 
-<select name="child" id="child">
+<select name="child" id="child" required>
   <option value="">Select Child</option>
   <option value="0">0</option>
   <option value="1">1</option>
@@ -67,7 +77,7 @@ if($flag != 1){
   <option value="9">9</option>
 </select>
 
-<select name="infant" id="infant">
+<select name="infant" id="infant" required>
   <option value="">Select Infant</option>
   <option value="0">0</option>
   <option value="1">1</option>
@@ -81,34 +91,38 @@ if($flag != 1){
   <option value="9">9</option>
 </select>
   
-<select name="class" id="class">
+<select name="class" id="class" required>
   <option value="">Select Class</option>
   <option value="all">All</option>
   <option value="economy">Economy</option>
   <option value="premium economy">Premium Economy</option>
   <option value="business">Business</option>
 </select>
-  
+  <input type="hidden" name="username" value="<?php echo $username; ?>">
   <button type="submit">Search</button>
 </form>
 </div>
   <a href="user_logout"><button style="margin-left: 1100px;color:red">Log Out</button></a>
 <br><br>
-<div class="container">
-<p>Source : </p>
-<p>Destination : </p>
-<p>Duration : </p>
-<p>Departure : </p>
-<p>Arrival : </p>
-<p>PublishedFare : </p>
-<p>OfferedFare : </p>
-<p>Discount : </p>
-<p>Destination : </p>
-<p>Destination : </p>
-<p></p>
-<p></p>
-</div>
+<?php if(isset($search_data) && $search_data != ''){ // echo count($search_data['Response']['Results']['0']['0']);
 
+$search_data_arr = $search_data['Response']['Results']['0'];
+foreach($search_data_arr as $search_data_arr){
+?>
+<div class="container" style="margin-left: 40px;">
+<p>Flight Name : <?php echo $search_data_arr['Segments']['0']['0']['Airline']['AirlineName']; ?> </p>
+<p>Origin : <?php echo $search_data['Response']['Origin']; ?> </p>
+<p>Destination : <?php echo $search_data['Response']['Destination']; ?></p>
+<p>Duration : <?php echo $search_data_arr['Segments']['0']['0']['Duration']; ?></p>
+<p>Departure : <?php echo $search_data_arr['Segments']['0']['0']['StopPointDepartureTime']; ?> </p>
+<p>Arrival : <?php echo $search_data_arr['Segments']['0']['0']['StopPointArrivalTime']; ?></p>
+<p>PublishedFare : <?php echo $search_data_arr['Fare']['PublishedFare']; ?> </p>
+<p>OfferedFare : <?php echo $search_data_arr['Fare']['OfferedFare']; ?></p>
+<p>Discount : <?php echo $search_data_arr['Fare']['Discount']; ?></p>
+<p>AirPort : <?php echo $search_data_arr['Segments']['0']['0']['Origin']['Airport']['AirportName']; ?> </p>
+</div>
+<br><br>
+<?php }} //echo'<pre>';print_r($search_data);  ?>
 
 </div>
 
