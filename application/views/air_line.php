@@ -99,13 +99,15 @@ if($flag != 1){
   <option value="business">Business</option>
 </select>
   <input type="hidden" name="username" value="<?php echo $username; ?>">
+  <input type="hidden" name="TokenId" value="<?php echo $TokenId; ?>">
   <button type="submit">Search</button>
 </form>
 </div>
   <a href="user_logout"><button style="margin-left: 1100px;color:red">Log Out</button></a>
 <br><br>
-<?php if(isset($search_data) && $search_data != ''){ // echo count($search_data['Response']['Results']['0']['0']);
-
+<?php if(isset($search_data) && $search_data != ''){ //print_r($search_data); echo count($search_data['Response']['Results']['0']['0']);
+ if(isset($search_data['Response']['Results']) && $search_data['Response']['Results'] != ''){
+	 
 $search_data_arr = $search_data['Response']['Results']['0'];
 foreach($search_data_arr as $search_data_arr){
 ?>
@@ -122,7 +124,7 @@ foreach($search_data_arr as $search_data_arr){
 <p>AirPort : <?php echo $search_data_arr['Segments']['0']['0']['Origin']['Airport']['AirportName']; ?> </p>
 </div>
 <br><br>
-<?php }} //echo'<pre>';print_r($search_data);  ?>
+<?php }}} //echo'<pre>';print_r($search_data);  ?>
 
 </div>
 

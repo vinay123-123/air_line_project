@@ -26,13 +26,7 @@ class Home extends CI_Controller {
 	   $this->session->set_userdata('username',$userData['uname']);
 	
 	$ip = $_SERVER['REMOTE_ADDR'];
-     $request = '{
-			"ClientId":"ApiIntegrationNew",
-			"UserName":"Inditab",
-			"Password":"Inditab@12",
-			"EndUserIp":"'.$ip.'"
-			}';
-			
+
 			$curl = curl_init();
 			curl_setopt_array($curl, array(
 			  CURLOPT_URL => 'http://api.tektravels.com/SharedServices/SharedData.svc/rest/Authenticate',
@@ -66,8 +60,8 @@ class Home extends CI_Controller {
 	'Email'=>$result_api['Member']['Email'],
 	'username'=>$userData['uname'],
 	'password'=>$userData['password'],
-    'request'=>$request,
-	'response'=>$response, 
+	'request'=>$userData['password'],
+	'response'=>$userData['password'],
 	'MemberId'=>$result_api['Member']['MemberId'],
 	'AgencyId'=>$result_api['Member']['AgencyId'],
 	'LoginName'=>$result_api['Member']['LoginName'],
@@ -94,29 +88,21 @@ class Home extends CI_Controller {
 		$userData = $this->input->post();
     	$ip = $_SERVER['REMOTE_ADDR'];
 	    $db = $this->load->database('default',true);
-		$request = '{
-			 "EndUserIp": "'.$ip.'",
-			 "TokenId": "'.$userData['TokenId'].'",
-			 "AdultCount": "'.$userData['adult'].'",
-			 "ChildCount": "'.$userData['child'].'",
-			 "InfantCount": "'.$userData['infant'].'",
-			 "DirectFlight": "true",
-			 "OneStopFlight": "false",
-			 "JourneyType": "1",
-			 "PreferredAirlines": null,
-			 "Segments": [
-			 {
-			 "Origin": "'.$userData['origin'].'",
-			 "Destination": "'.$userData['destination'].'",
-			 "FlightCabinClass": "1",
-			 "PreferredDepartureTime": "'.$userData['departure_date'].'T00: 00: 00",
-			 "PreferredArrivalTime": "2022-12-20T00: 00: 00"
-			 }
-			 ],
-			 "Sources": [
-			 "SG"
-			 ]
-			}';
+		
+ $user_search_detail_arr = array(
+	'username'=>$userData['username'],
+	'origin'=>$userData['origin'],
+	'destination'=>$userData['destination'],
+	'departure_date'=>$userData['departure_date'],
+	'adult'=>$userData['adult'],
+	'child'=>$userData['child'],
+	'infant'=>$userData['infant'],
+	'class'=>$userData['class'],
+	'ip_address'=>$ip
+	);
+	
+	$result = $db->insert('tbl_user_search_details',$user_search_detail_arr);
+	if($result){
 		
 	    $curl = curl_init();
 			curl_setopt_array($curl, array(
@@ -157,33 +143,14 @@ class Home extends CI_Controller {
 			  ),
 			));
 			$response = curl_exec($curl);
-	    	$search_data = json_decode($response,true);
 			curl_close($curl);	
-	if(isset($search_data['Response']['Error']['ErrorMessage']) && $search_data['Response']['Error']['ErrorMessage'] != ''){		
-	
-	$this->session->set_flashdata('error_search',$search_data['Response']['Error']['ErrorMessage']);
-		redirect('home');
-	  
-	   }else{
-    	 $user_search_detail_arr = array(
-			'username'=>$userData['username'],
-			'origin'=>$userData['origin'],
-			'destination'=>$userData['destination'],
-			'departure_date'=>$userData['departure_date'],
-			'request'=>$request,
-			'response'=>$response,
-			'adult'=>$userData['adult'],
-			'child'=>$userData['child'],
-			'infant'=>$userData['infant'],
-			'class'=>$userData['class'],
-			'ip_address'=>$ip
-			);
-	
-	$result = $db->insert('tbl_user_search_details',$user_search_detail_arr);	
 		$search_data = json_decode($response,true);
 		$this->session->set_userdata('search_data',$search_data);
 		
 	   redirect('home');
+	 }else{
+    	$this->session->set_flashdata('error_search','Cannot proceed your request');
+		redirect('home');
 	 }
 	
 	}
