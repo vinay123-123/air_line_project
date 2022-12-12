@@ -49,7 +49,7 @@ if($flag != 1){
 
   <input  type="text" placeholder="Enter Departure Date"
         onfocus="(this.type='date')"
-        onblur="(this.type='text')" name="departure_date" value="<?php if(isset($input_data['departure_date'])){echo $input_data['departure_date'];}; ?>" required>
+        onblur="(this.type='text')" min="<?php echo date('Y-m-d'); ?>" name="departure_date" value="<?php if(isset($input_data['departure_date'])){echo $input_data['departure_date'];}; ?>" required>
   
 <select name="adult" id="adult" required>
   <option value="">Select Adult</option>
@@ -94,10 +94,12 @@ if($flag != 1){
   
 <select name="class" id="class" required>
   <option value="">Select Class</option>
-  <option value="all" <?php if(isset($input_data['class'])){echo $input_data['class']=='all'?'selected':'';}; ?>>All</option>
-  <option value="economy" <?php if(isset($input_data['class'])){echo $input_data['class']=='economy'?'selected':'';}; ?>>Economy</option>
-  <option value="premium economy" <?php if(isset($input_data['class'])){echo $input_data['class']=='premium economy'?'selected':'';}; ?>>Premium Economy</option>
-  <option value="business" <?php if(isset($input_data['class'])){echo $input_data['class']=='business'?'selected':'';}; ?>>Business</option>
+  <option value="1" <?php if(isset($input_data['class'])){echo $input_data['class']=='1'?'selected':'';}; ?>>All</option>
+  <option value="2" <?php if(isset($input_data['class'])){echo $input_data['class']=='2'?'selected':'';}; ?>>Economy</option>
+  <option value="3" <?php if(isset($input_data['class'])){echo $input_data['class']=='3'?'selected':'';}; ?>>Premium Economy</option>
+  <option value="4" <?php if(isset($input_data['class'])){echo $input_data['class']=='4'?'selected':'';}; ?>>Business</option>
+  <option value="5" <?php if(isset($input_data['class'])){echo $input_data['class']=='5'?'selected':'';}; ?>>Premium Business</option>
+  <option value="6" <?php if(isset($input_data['class'])){echo $input_data['class']=='6'?'selected':'';}; ?>>First</option>
 </select>
   <input type="hidden" name="username" value="<?php echo $username; ?>">
   <input type="hidden" name="TokenId" value="<?php echo $TokenId; ?>">
@@ -116,12 +118,26 @@ foreach($search_data_arr as $search_data_arr){
 <p>Flight Name : <?php echo $search_data_arr['Segments']['0']['0']['Airline']['AirlineName']; ?> </p>
 <p>Origin : <?php echo $search_data['Response']['Origin']; ?> </p>
 <p>Destination : <?php echo $search_data['Response']['Destination']; ?></p>
-<p>Duration : <?php echo $search_data_arr['Segments']['0']['0']['Duration']; ?></p>
-<p>Departure : <?php echo $search_data_arr['Segments']['0']['0']['StopPointDepartureTime']; ?> </p>
-<p>Arrival : <?php echo $search_data_arr['Segments']['0']['0']['StopPointArrivalTime']; ?></p>
+<p>Duration : <?php echo $search_data_arr['Segments']['0']['0']['Duration'].' min'; ?></p>
+<p>Departure : <?php echo $search_data_arr['Segments']['0']['0']['Origin']['DepTime']; ?> </p>
+<p>Arrival : <?php echo $search_data_arr['Segments']['0']['0']['Destination']['ArrTime']; ?></p>
+<p>CabinClass : <?php $CabinClass = $search_data_arr['Segments']['0']['0']['CabinClass']; 
+if($CabinClass == 1){
+	echo'All';
+}elseif($CabinClass == 2){
+	echo'Economy';
+}elseif($CabinClass == 3){
+	echo'Premium Economy';
+}elseif($CabinClass == 4){
+	echo'Business';
+}elseif($CabinClass == 5){
+	echo'Premium Business';
+}elseif($CabinClass == 6){
+	echo'First';
+}  ?></p>
 <p>PublishedFare : <?php echo $search_data_arr['Fare']['PublishedFare']; ?> </p>
 <p>OfferedFare : <?php echo $search_data_arr['Fare']['OfferedFare']; ?></p>
-<p>Discount : <?php echo $search_data_arr['Fare']['Discount']; ?></p>
+<p>Discount : <?php echo $search_data_arr['Fare']['PublishedFare']-$search_data_arr['Fare']['OfferedFare']; ?></p>
 <p>AirPort : <?php echo $search_data_arr['Segments']['0']['0']['Origin']['Airport']['AirportName']; ?> </p>
 </div>
 <br><br>

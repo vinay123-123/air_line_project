@@ -17,7 +17,7 @@ class Home extends CI_Controller {
 	{
 		$userData = $this->input->post();
 	    $db = $this->load->database('default',true);
-	     $result = $db->select('*')->from('tbl_admin')->where(array('username'=>$userData['uname'],'password'=>$userData['password']));
+	     $result = $db->select('*')->from('tbl_admin')->where(array('username'=>$userData['uname'],'password'=>md5($userData['password'])));
 	$result_arr = $result->get();
 	
 	if($result_arr->num_rows() > 0)
@@ -43,12 +43,7 @@ class Home extends CI_Controller {
 			  CURLOPT_FOLLOWLOCATION => true,
 			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			  CURLOPT_CUSTOMREQUEST => 'POST',
-			  CURLOPT_POSTFIELDS =>'{
-			"ClientId":"ApiIntegrationNew",
-			"UserName":"Inditab",
-			"Password":"Inditab@12",
-			"EndUserIp":"'.$ip.'"
-			}',
+			  CURLOPT_POSTFIELDS =>$request,
 			  CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json'
 			  ),
@@ -67,7 +62,7 @@ class Home extends CI_Controller {
 	'LastName'=>$result_api['Member']['LastName'],
 	'Email'=>$result_api['Member']['Email'],
 	'username'=>$userData['uname'],
-	'password'=>$userData['password'],
+	'password'=>md5($userData['password']),
     'request'=>$request,
 	'response'=>$response, 
 	'MemberId'=>$result_api['Member']['MemberId'],
@@ -94,6 +89,8 @@ class Home extends CI_Controller {
  public function search_flight()
 	{
 		$userData = $this->input->post();
+		$arrT = date('Y-m-d', strtotime($userData['departure_date'] . ' +4 day'));
+		
     	$ip = $_SERVER['REMOTE_ADDR'];
 	    $db = $this->load->database('default',true);
 		$request = '{
@@ -102,7 +99,7 @@ class Home extends CI_Controller {
 			 "AdultCount": "'.$userData['adult'].'",
 			 "ChildCount": "'.$userData['child'].'",
 			 "InfantCount": "'.$userData['infant'].'",
-			 "DirectFlight": "true",
+			 "DirectFlight": "false",
 			 "OneStopFlight": "false",
 			 "JourneyType": "1",
 			 "PreferredAirlines": null,
@@ -110,13 +107,13 @@ class Home extends CI_Controller {
 			 {
 			 "Origin": "'.$userData['origin'].'",
 			 "Destination": "'.$userData['destination'].'",
-			 "FlightCabinClass": "1",
+			 "FlightCabinClass": "'.$userData['class'].'",
 			 "PreferredDepartureTime": "'.$userData['departure_date'].'T00: 00: 00",
-			 "PreferredArrivalTime": "2022-12-20T00: 00: 00"
+			 "PreferredArrivalTime": "'.$arrT.'T00: 00: 00"
 			 }
 			 ],
 			 "Sources": [
-			 "SG"
+			 "GDS"
 			 ]
 			}';
 		
@@ -130,39 +127,20 @@ class Home extends CI_Controller {
 			  CURLOPT_FOLLOWLOCATION => true,
 			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			  CURLOPT_CUSTOMREQUEST => 'POST',
-			  CURLOPT_POSTFIELDS =>'{
-			 "EndUserIp": "'.$ip.'",
-			 "TokenId": "'.$userData['TokenId'].'",
-			 "AdultCount": "'.$userData['adult'].'",
-			 "ChildCount": "'.$userData['child'].'",
-			 "InfantCount": "'.$userData['infant'].'",
-			 "DirectFlight": "true",
-			 "OneStopFlight": "false",
-			 "JourneyType": "1",
-			 "PreferredAirlines": null,
-			 "Segments": [
-			 {
-			 "Origin": "'.$userData['origin'].'",
-			 "Destination": "'.$userData['destination'].'",
-			 "FlightCabinClass": "1",
-			 "PreferredDepartureTime": "'.$userData['departure_date'].'T00: 00: 00",
-			 "PreferredArrivalTime": "2023-01-20T00: 00: 00"
-			 }
-			 ],
-			 "Sources": [
-			 "G8"
-			 ]
-			}',
+			  CURLOPT_POSTFIELDS =>$request,
 			  CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json',
 				'Accept: application/json'
 			  ),
 			));
 			$response = curl_exec($curl);
+			
+			//echo $response;die;
 	    	$search_data = json_decode($response,true);
 			curl_close($curl);	
 	if(isset($search_data['Response']['Error']['ErrorMessage']) && $search_data['Response']['Error']['ErrorMessage'] != ''){		
 	
+	$this->session->unset_userdata('search_data');
 	$this->session->set_userdata('input_data',$userData);
 	$this->session->set_flashdata('error_search',$search_data['Response']['Error']['ErrorMessage']);
 		redirect('home');
@@ -191,6 +169,7 @@ class Home extends CI_Controller {
 	 }
 	
 	}
+	
 	public function user_logout()
 	{
 	$TokenId = $this->session->userdata('TokenId');
