@@ -4,6 +4,7 @@ $TokenId = $this->session->userdata('TokenId');
 $username = $this->session->userdata('username');
 $search_data = $this->session->userdata('search_data');
 $input_data = $this->session->userdata('input_data');
+$user_id = $this->session->userdata('user_id');
 
 if($flag != 1){
 	redirect('login');
@@ -103,6 +104,7 @@ if($flag != 1){
 </select>
   <input type="hidden" name="username" value="<?php echo $username; ?>">
   <input type="hidden" name="TokenId" value="<?php echo $TokenId; ?>">
+  <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
   <button type="submit">Search</button>
 </form>
 </div>

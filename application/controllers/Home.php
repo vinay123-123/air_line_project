@@ -58,6 +58,7 @@ class Home extends CI_Controller {
 	$this->session->set_userdata('TokenId',$result_api['TokenId']);
 	$this->session->set_userdata('MemberId',$result_api['Member']['MemberId']);
 	$this->session->set_userdata('AgencyId',$result_api['Member']['AgencyId']);
+	$this->session->set_userdata('user_id',$user_details['user_id']);
 	
 	$user_detail_arr = array(
 	'FirstName'=>$result_api['Member']['FirstName'],
@@ -152,7 +153,7 @@ class Home extends CI_Controller {
 	  
 	   }else{
     	 $user_search_detail_arr = array(
-			'username'=>$userData['username'],
+			'user_id'=>$userData['user_id'],
 			'origin'=>$userData['origin'],
 			'destination'=>$userData['destination'],
 			'departure_date'=>$userData['departure_date'],
@@ -211,6 +212,7 @@ class Home extends CI_Controller {
 		$this->session->unset_userdata('TokenId');
 		$this->session->unset_userdata('MemberId');
 	    $this->session->unset_userdata('AgencyId');	
+	    $this->session->unset_userdata('user_id');	
 	    $this->session->unset_userdata('input_data');	
 	      redirect('login');
   }
