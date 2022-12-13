@@ -17,19 +17,21 @@ class Home extends CI_Controller {
 	{
 		$userData = $this->input->post();
 	    $db = $this->load->database('default',true);
-	     $result = $db->select('*')->from('tbl_admin')->where(array('username'=>$userData['uname'],'password'=>md5($userData['password'])));
+	     $result = $db->select('*')->from('tbl_user')->where(array('username'=>$userData['uname'],'password'=>md5($userData['password'])));
 	$result_arr = $result->get();
 	
 	if($result_arr->num_rows() > 0)
 	{
+		$user_details = $result_arr->row_array();
+		
 		$this->session->set_userdata('flag',1);
 	   $this->session->set_userdata('username',$userData['uname']);
 	
 	$ip = $_SERVER['REMOTE_ADDR'];
      $request = '{
 			"ClientId":"ApiIntegrationNew",
-			"UserName":"Inditab",
-			"Password":"Inditab@12",
+			"UserName":"'.$userData['uname'].'",
+			"Password":"'.$userData['password'].'",
 			"EndUserIp":"'.$ip.'"
 			}';
 			
@@ -61,8 +63,7 @@ class Home extends CI_Controller {
 	'FirstName'=>$result_api['Member']['FirstName'],
 	'LastName'=>$result_api['Member']['LastName'],
 	'Email'=>$result_api['Member']['Email'],
-	'username'=>$userData['uname'],
-	'password'=>md5($userData['password']),
+	'user_id'=>$user_details['user_id'],
     'request'=>$request,
 	'response'=>$response, 
 	'MemberId'=>$result_api['Member']['MemberId'],
@@ -167,8 +168,7 @@ class Home extends CI_Controller {
 		
 	   redirect('home');
 	 }
-	
-	}
+}
 	
 	public function user_logout()
 	{
