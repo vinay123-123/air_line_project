@@ -79,8 +79,12 @@ class Home extends CI_Controller {
 	);
 	
 	$result = $db->insert('tbl_user_login_details',$user_detail_arr);
-	}
-	      redirect('home');
+	  redirect('home');
+	 }else{
+		$this->session->set_flashdata('error_msg','Plaese enter correct username and password');
+		   redirect('login'); 
+	 }
+	    
 	}else{
 		$this->session->set_flashdata('error_msg','Plaese enter correct username and password');
 		   redirect('login'); 
