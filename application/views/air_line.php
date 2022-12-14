@@ -1,7 +1,10 @@
 <?php
 $flag = $this->session->userdata('flag');
-$TokenId = $this->session->userdata('TokenId');
-$username = $this->session->userdata('username');
+$path = base_url().'token_folder/token_id.txt';
+$token_id_json = file_get_contents($path);
+$token_id_arr = json_decode($token_id_json,true);
+$TokenId = $token_id_arr['token_id'];
+
 $search_data = $this->session->userdata('search_data');
 $input_data = $this->session->userdata('input_data');
 $user_id = $this->session->userdata('user_id');
@@ -28,6 +31,7 @@ if($flag != 1){
   <h3 style="color: red;"><?php if(isset($error_search)){
 	  echo $error_search;
   } ?></h3> 
+  <b>User Id : </b><?php echo $user_id; ?>
 <div class="row" style="margin-top:30px">
 <form class="example" action="<?php echo base_url(); ?>/search_flight" method="post">
 <select name="origin" id="origin" required>
@@ -102,7 +106,6 @@ if($flag != 1){
   <option value="5" <?php if(isset($input_data['class'])){echo $input_data['class']=='5'?'selected':'';}; ?>>Premium Business</option>
   <option value="6" <?php if(isset($input_data['class'])){echo $input_data['class']=='6'?'selected':'';}; ?>>First</option>
 </select>
-  <input type="hidden" name="username" value="<?php echo $username; ?>">
   <input type="hidden" name="TokenId" value="<?php echo $TokenId; ?>">
   <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
   <button type="submit">Search</button>

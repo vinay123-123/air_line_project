@@ -15,23 +15,34 @@ class Home extends CI_Controller {
 
 	public function user_login()
 	{
-		$userData = $this->input->post();
+	   $userData = $this->input->post();
 	    $db = $this->load->database('default',true);
 	     $result = $db->select('*')->from('tbl_user')->where(array('username'=>$userData['uname'],'password'=>md5($userData['password'])));
-	$result_arr = $result->get();
+	  $result_arr = $result->get();
 	
 	if($result_arr->num_rows() > 0)
 	{
 		$user_details = $result_arr->row_array();
 		
 		$this->session->set_userdata('flag',1);
-	   $this->session->set_userdata('username',$userData['uname']);
+	   $this->session->set_userdata('user_id',$user_details['user_id']);
+	   
+	    date_default_timezone_set("Asia/Calcutta");	
+		
+	$path = base_url().'token_folder/token_id.txt';
+	$token_id_json = file_get_contents($path);
+	$token_id_arr = json_decode($token_id_json,true);
+	$token_id_datetime = $token_id_arr['datetime'];
+	$current_datetime = date('Y-m-d h:i:s');
+	$hourdiff = round((strtotime($current_datetime) - strtotime($token_id_datetime))/3600, 1);
 	
-	$ip = $_SERVER['REMOTE_ADDR'];
+	if($hourdiff > 24){
+		
+   	 $ip = $_SERVER['REMOTE_ADDR'];
      $request = '{
 			"ClientId":"ApiIntegrationNew",
-			"UserName":"'.$userData['uname'].'",
-			"Password":"'.$userData['password'].'",
+			"UserName":"Inditab",
+			"Password":"Inditab@12",
 			"EndUserIp":"'.$ip.'"
 			}';
 			
@@ -52,45 +63,21 @@ class Home extends CI_Controller {
 			));
 			$response = curl_exec($curl);
 			curl_close($curl);
-			
         $result_api = json_decode($response,true);
-	if(isset($result_api['TokenId']) && $result_api['TokenId'] != ''){	
-	$this->session->set_userdata('TokenId',$result_api['TokenId']);
-	$this->session->set_userdata('MemberId',$result_api['Member']['MemberId']);
-	$this->session->set_userdata('AgencyId',$result_api['Member']['AgencyId']);
-	$this->session->set_userdata('user_id',$user_details['user_id']);
+	 
+	   $TokenId = $result_api['TokenId'];	
+	   
+	   $token_id_update_json = '{"token_id":"'.$TokenId.'","datetime":"'.date('Y-m-d h:i:s').'"}';
 	
-	$user_detail_arr = array(
-	'FirstName'=>$result_api['Member']['FirstName'],
-	'LastName'=>$result_api['Member']['LastName'],
-	'Email'=>$result_api['Member']['Email'],
-	'user_id'=>$user_details['user_id'],
-    'request'=>$request,
-	'response'=>$response, 
-	'MemberId'=>$result_api['Member']['MemberId'],
-	'AgencyId'=>$result_api['Member']['AgencyId'],
-	'LoginName'=>$result_api['Member']['LoginName'],
-	'LoginDetails'=>$result_api['Member']['LoginDetails'],
-	'TokenId'=>$result_api['TokenId'],
-	'ip_address'=>$ip,
-	'isPrimaryAgent'=>$result_api['Member']['isPrimaryAgent'],
-	'status'=>$result_api['Status'],
-	'ErrorCode'=>$result_api['Error']['ErrorCode'],
-	'ErrorMessage'=>$result_api['Error']['ErrorMessage'],
-	);
-	
-	$result = $db->insert('tbl_user_login_details',$user_detail_arr);
-	  redirect('home');
-	 }else{
-		$this->session->set_flashdata('error_msg','Plaese enter correct username and password');
-		   redirect('login'); 
-	 }
-	    
-	}else{
-		$this->session->set_flashdata('error_msg','Plaese enter correct username and password');
-		   redirect('login'); 
+       $path =  'token_folder/token_id.txt';		
+		  file_put_contents($path, $token_id_update_json);
 	}
-  }
+	    redirect('home');	
+	}else{
+	$this->session->set_flashdata('error_msg','Plaese enter correct username and password');
+		   redirect('login');		
+	}
+}
 
  public function search_flight()
 	{
@@ -177,41 +164,8 @@ class Home extends CI_Controller {
 	
 	public function user_logout()
 	{
-	$TokenId = $this->session->userdata('TokenId');
-	$MemberId =	$this->session->userdata('MemberId');
-	$AgencyId =	$this->session->userdata('AgencyId');	
-	$ip = $_SERVER['REMOTE_ADDR'];
-	
-	$curl = curl_init();
-
-	curl_setopt_array($curl, array(
-	  CURLOPT_URL => 'http://api.tektravels.com/SharedServices/SharedData.svc/rest/Logout',
-	  CURLOPT_RETURNTRANSFER => true,
-	  CURLOPT_ENCODING => '',
-	  CURLOPT_MAXREDIRS => 10,
-	  CURLOPT_TIMEOUT => 0,
-	  CURLOPT_FOLLOWLOCATION => true,
-	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-	  CURLOPT_CUSTOMREQUEST => 'POST',
-	  CURLOPT_POSTFIELDS =>'{
-	"ClientId": "ApiIntegrationNew",
-	"EndUserIp": "'.$ip.'",
-	"TokenAgencyId": '.$AgencyId.',
-	"TokenMemberId": '.$MemberId.',
-	"TokenId": "'.$TokenId.'"
-	}',
-	  CURLOPT_HTTPHEADER => array(
-		'Content-Type: application/json'
-	  ),
-	));
-	$response = curl_exec($curl);
-	curl_close($curl);
-	
 		$this->session->unset_userdata('flag');
 		$this->session->unset_userdata('search_data');
-		$this->session->unset_userdata('TokenId');
-		$this->session->unset_userdata('MemberId');
-	    $this->session->unset_userdata('AgencyId');	
 	    $this->session->unset_userdata('user_id');	
 	    $this->session->unset_userdata('input_data');	
 	      redirect('login');
