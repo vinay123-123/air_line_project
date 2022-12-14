@@ -31,7 +31,6 @@ class Home extends CI_Controller {
 		
 	$path = 'token_folder/token_id.txt';
 	$token_id_json = file_get_contents($path);
-		echo $token_id_json;die;
 	$token_id_arr = json_decode($token_id_json,true);
 	$token_id_datetime = $token_id_arr['datetime'];
 	$current_datetime = date('Y-m-d h:i:s');
