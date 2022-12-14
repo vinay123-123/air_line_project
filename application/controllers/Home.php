@@ -26,6 +26,7 @@ class Home extends CI_Controller {
 		
 		$this->session->set_userdata('flag',1);
 	   $this->session->set_userdata('user_id',$user_details['user_id']);
+	   $this->session->set_userdata('user_name',$user_details['username']);
 	   
 	    date_default_timezone_set("Asia/Calcutta");	
 		
@@ -168,6 +169,7 @@ class Home extends CI_Controller {
 		$this->session->unset_userdata('search_data');
 	    $this->session->unset_userdata('user_id');	
 	    $this->session->unset_userdata('input_data');	
+		$this->session->unset_userdata('user_name');
 	      redirect('login');
   }
   

@@ -8,6 +8,7 @@ $TokenId = $token_id_arr['token_id'];
 $search_data = $this->session->userdata('search_data');
 $input_data = $this->session->userdata('input_data');
 $user_id = $this->session->userdata('user_id');
+$user_name = $this->session->userdata('user_name');
 
 if($flag != 1){
 	redirect('login');
@@ -31,7 +32,7 @@ if($flag != 1){
   <h3 style="color: red;"><?php if(isset($error_search)){
 	  echo $error_search;
   } ?></h3> 
-  <b>User Id : </b><?php echo $user_id; ?>
+  <b>User Id : </b><?php echo $user_id; ?> | <b>User Name : </b><?php echo ucwords($user_name); ?>
 <div class="row" style="margin-top:30px">
 <form class="example" action="<?php echo base_url(); ?>/search_flight" method="post">
 <select name="origin" id="origin" required>
