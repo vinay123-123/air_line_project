@@ -1,6 +1,6 @@
 <?php
 $flag = $this->session->userdata('flag');
-$path = base_url().'token_folder/token_id.txt';
+$path = 'token_folder/token_id.txt';
 $token_id_json = file_get_contents($path);
 $token_id_arr = json_decode($token_id_json,true);
 $TokenId = $token_id_arr['token_id'];
