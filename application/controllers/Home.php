@@ -34,10 +34,60 @@ class Home extends CI_Controller {
 	$token_id_json = file_get_contents($path);
 	$token_id_arr = json_decode($token_id_json,true);
 	$token_id_datetime = $token_id_arr['datetime'];
+	$token_id_idd = $token_id_arr['token_id'];
 	$current_datetime = date('Y-m-d h:i:s');
 	$hourdiff = round((strtotime($current_datetime) - strtotime($token_id_datetime))/3600, 1);
 	
-	if($hourdiff > 24){
+	
+	$ip = $_SERVER['REMOTE_ADDR'];
+		$request = '{
+			 "EndUserIp": "'.$ip.'",
+			 "TokenId": "'.$token_id_idd.'",
+			 "AdultCount": "3",
+			 "ChildCount": "1",
+			 "InfantCount": "1",
+			 "DirectFlight": "false",
+			 "OneStopFlight": "false",
+			 "JourneyType": "1",
+			 "PreferredAirlines": null,
+			 "Segments": [
+			 {
+			 "Origin": "DEL",
+			 "Destination": "GOI",
+			 "FlightCabinClass": "1",
+			 "PreferredDepartureTime": "2022-12-05T00: 00: 00",
+			 "PreferredArrivalTime": "2022-12-06T00: 00: 00"
+			 }
+			 ],
+			 "Sources": [
+			 "GDS"
+			 ]
+			}';
+		
+	    $curl = curl_init();
+			curl_setopt_array($curl, array(
+			  CURLOPT_URL => 'http://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/Search',
+			  CURLOPT_RETURNTRANSFER => true,
+			  CURLOPT_ENCODING => '',
+			  CURLOPT_MAXREDIRS => 10,
+			  CURLOPT_TIMEOUT => 0,
+			  CURLOPT_FOLLOWLOCATION => true,
+			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			  CURLOPT_CUSTOMREQUEST => 'POST',
+			  CURLOPT_POSTFIELDS =>$request,
+			  CURLOPT_HTTPHEADER => array(
+				'Content-Type: application/json',
+				'Accept: application/json'
+			  ),
+			));
+			$response = curl_exec($curl);
+			
+			//echo $response;die;
+	    	$search_data = json_decode($response,true);
+			curl_close($curl);	
+	
+	
+ if($hourdiff > 24 || (isset($search_data['Response']['Error']['ErrorMessage']) && $search_data['Response']['Error']['ErrorMessage'] == 'Invalid Token')){
 		
    	 $ip = $_SERVER['REMOTE_ADDR'];
      $request = '{
